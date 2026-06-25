@@ -64,23 +64,31 @@ class MazeGenerator:
         self._embed_42_pattern()
 
     def _embed_42_pattern(self) -> None:
-        """Embeds the '42' pattern if the maze is large enough."""
-        p_width = 7
-        p_height = 5
+        """Embeds the '42' pattern in the center of the maze."""
+        cx = self.width // 2
+        cy = self.height // 2
 
-        if self.width < p_width + 2 or self.height < p_height + 2:
-            print("Error: Maze size is too small to fit the '42' pattern.",
-                  file=sys.stderr)
-            return
+        # Exact coordinates for the "42" pattern, relative to the center
+        four_coords = [
+            (-3, -2),                      # #
+            (-3, -1),                      # #
+            (-3,  0), (-2,  0), (-1,  0),  # # # #
+                                (-1,  1),  # . . #
+                                (-1,  2)   # . . #
+        ]
 
-        start_x = (self.width - p_width) // 2
-        start_y = (self.height - p_height) // 2
+        two_coords = [
+            ( 1, -2), ( 2, -2), ( 3, -2),  # # # #
+                                ( 3, -1),  # . . #
+            ( 1,  0), ( 2,  0), ( 3,  0),  # # # #
+            ( 1,  1),                      # # . .
+            ( 1,  2), ( 2,  2), ( 3,  2)   # # # #
+        ]
 
-        for dx, dy in PATTERN_42:
-            cell_x = start_x + dx
-            cell_y = start_y + dy
-            if (cell_x, cell_y) not in (self.entry, self.exit_coord):
-                self.reserved_cells.add((cell_x, cell_y))
+        for dx, dy in four_coords + two_coords:
+            x, y = cx + dx, cy + dy
+            if 0 <= x < self.width and 0 <= y < self.height:
+                self.reserved_cells.add((x, y))
 
     def _get_unvisited_neighbors(
         self, x: int, y: int, visited: Set[Tuple[int, int]]

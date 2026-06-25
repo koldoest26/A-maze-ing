@@ -1,8 +1,6 @@
-# Configuración base del laberinto
-WIDTH=20
-HEIGHT=15
+WIDTH=40
+HEIGHT=25
 ENTRY=0,0
-EXIT=19,14
+EXIT=39,24
+PERFECT=true
 OUTPUT_FILE=maze_output.txt
-PERFECT=True
-SEED=42

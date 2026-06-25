@@ -2,7 +2,7 @@
 
 import sys
 import os
-from typing import Dict, Tuple, Any
+from typing import Dict, Any
 from mazegen.generator import MazeGenerator
 
 
@@ -11,29 +11,33 @@ def parse_config(filename: str) -> Dict[str, Any]:
     config: Dict[str, Any] = {}
 
     if not os.path.exists(filename):
-        raise FileNotFoundError(f"Configuration file '{filename}' not found.")
+        raise FileNotFoundError(f"Config file '{filename}' not found.")
 
     with open(filename, 'r') as f:
         for line_num, line in enumerate(f, 1):
             line = line.strip()
-            # Ignorar comentarios y líneas vacías
+            # Ignore comments and empty lines
             if not line or line.startswith('#'):
                 continue
 
             if '=' not in line:
-                raise ValueError(f"Line {line_num}: Missing '=' in key-value pair.")
+                raise ValueError(
+                    f"Line {line_num}: Missing '=' in key-value pair."
+                )
 
             key, value = line.split('=', 1)
             key = key.strip().upper()
             value = value.strip()
 
-            # Parsear los tipos de datos
+            # Parse data types
             if key in ('WIDTH', 'HEIGHT'):
                 config[key] = int(value)
             elif key in ('ENTRY', 'EXIT'):
                 coords = value.split(',')
                 if len(coords) != 2:
-                    raise ValueError(f"Line {line_num}: Invalid coordinates for {key}.")
+                    raise ValueError(
+                        f"Line {line_num}: Invalid coordinates for {key}."
+                    )
                 config[key] = (int(coords[0]), int(coords[1]))
             elif key == 'PERFECT':
                 config[key] = value.lower() == 'true'
@@ -42,14 +46,18 @@ def parse_config(filename: str) -> Dict[str, Any]:
             elif key == 'OUTPUT_FILE':
                 config[key] = value
             else:
-                # Guardar cualquier clave extra por si acaso
+                # Store any extra keys just in case
                 config[key] = value
 
-    # Validar claves obligatorias
-    required_keys = {'WIDTH', 'HEIGHT', 'ENTRY', 'EXIT', 'OUTPUT_FILE', 'PERFECT'}
+    # Validate mandatory keys
+    required_keys = {
+        'WIDTH', 'HEIGHT', 'ENTRY', 'EXIT', 'OUTPUT_FILE', 'PERFECT'
+    }
     missing = required_keys - config.keys()
     if missing:
-        raise KeyError(f"Missing mandatory configuration keys: {', '.join(missing)}")
+        raise KeyError(
+            f"Missing mandatory configuration keys: {', '.join(missing)}"
+        )
 
     return config
 
@@ -63,11 +71,11 @@ def main() -> None:
     config_file = sys.argv[1]
 
     try:
-        # Read and parse the configuration file
+        # Read configuration
         config = parse_config(config_file)
         print("Configuration loaded successfully.")
 
-        # Initialize the maze generator with the parsed configuration
+        # Initialize generator
         maze = MazeGenerator(
             width=config['WIDTH'],
             height=config['HEIGHT'],
@@ -77,17 +85,25 @@ def main() -> None:
             seed=config.get('SEED')
         )
 
-        # Generate the maze
+        # Generate and solve
         print("Carving the maze...")
         maze.generate()
 
-        # Save the maze to the specified output file
+        # Save output file
         output_file = config['OUTPUT_FILE']
         maze.save_to_file(output_file)
         print(f"Maze successfully saved to {output_file}")
 
+        # Start the graphical interface
+        from mlx_visualizer import MazeVisualizer
+        print("Starting MLX visualizer...")
+        print("Controls: 1:Regen | 2:Path | 3:Color | ESC:Quit")
+
+        gui = MazeVisualizer(maze, config)
+        gui.run()
+
     except Exception as e:
-        # Error handling: print the error message and exit with a non-zero status
+        # Graceful error handling (no abrupt crash)
         print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
 

@@ -1,4 +1,4 @@
-*This project has been created as part of the 42 curriculum by luisesti and LOGIN42.*
+*This project has been created as part of the 42 curriculum by luisesti and malopez-.*
 # A-Maze-ing: Procedural Maze Generator
 
 ## Description

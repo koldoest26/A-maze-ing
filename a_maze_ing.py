@@ -36,7 +36,7 @@ def parse_config(filename: str) -> Dict[str, Any]:
                 coords = value.split(',')
                 if len(coords) != 2:
                     raise ValueError(
-                        f"Line {line_num}: Invalid coordinates for {key}."
+                        f"Line {line_num}: Invalid coords for {key}."
                     )
                 config[key] = (int(coords[0]), int(coords[1]))
             elif key == 'PERFECT':
@@ -57,6 +57,27 @@ def parse_config(filename: str) -> Dict[str, Any]:
     if missing:
         raise KeyError(
             f"Missing mandatory configuration keys: {', '.join(missing)}"
+        )
+
+    # Impossible to generate a maze smaller than 3x3
+    if config['WIDTH'] < 3 or config['HEIGHT'] < 3:
+        raise ValueError("Maze dimensions must be at least 3x3")
+
+    # Validate that the entry and exit points are within bounds
+    entry_x, entry_y = config['ENTRY']
+    exit_x, exit_y = config['EXIT']
+
+    # Dividimos las líneas para no superar los 79 caracteres de Flake8
+    if not (0 <= entry_x < config['WIDTH'] and
+            0 <= entry_y < config['HEIGHT']):
+        raise ValueError(
+            f"ENTRY coordinates {config['ENTRY']} are out of bounds."
+        )
+
+    if not (0 <= exit_x < config['WIDTH'] and
+            0 <= exit_y < config['HEIGHT']):
+        raise ValueError(
+            f"EXIT coordinates {config['EXIT']} are out of bounds."
         )
 
     return config
@@ -97,7 +118,7 @@ def main() -> None:
         # Start the graphical interface
         from mlx_visualizer import MazeVisualizer
         print("Starting MLX visualizer...")
-        print("Controls: 1:Regen | 2:Path | 3:Color | ESC:Quit")
+        print("Controls: 1:Regen | 2:Path | 3:Color | 4:Animate | ESC:Quit")
 
         gui = MazeVisualizer(maze, config)
         gui.run()

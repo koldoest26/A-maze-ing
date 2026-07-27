@@ -1,4 +1,4 @@
-*This project has been created as part of the 42 curriculum by luisesti and LOGIN42.*
+*This project has been created as part of the 42 curriculum by luisesti and malopez-.*
 # A-Maze-ing: Procedural Maze Generator
 
 ## Description
@@ -128,7 +128,7 @@ solution = maze.solve()
 ### Roles
 To ensure efficiency and avoid merge conflicts, we divided the project into two distinct architectural layers:
 * **<luisesti> (Backend & Logic):** Responsible for the mathematical generation of the maze, the backtracker algorithm, bitwise data formatting, BFS pathfinding, configuration parsing, and building the pip-installable module.
-* **<login42> (Frontend & UI):** Responsible for integrating the MiniLibX library, translating the backend's data into visual pixels, handling keyboard hooks, managing application state (regenerate, toggle path, color changes), and memory leak prevention.
+* **<malopez-> (Frontend & UI):** Responsible for integrating the MiniLibX library, translating the backend's data into visual pixels, handling keyboard hooks, managing application state (regenerate, toggle path, color changes), and memory leak prevention.
 
 ### Anticipated Planning vs. Evolution
 * *Initial Plan:* We aimed to work on the algorithm together and then split the visual aspects.
@@ -136,7 +136,7 @@ To ensure efficiency and avoid merge conflicts, we divided the project into two 
 
 ### What Worked Well & Areas for Improvement
 * **Worked Well:** Decoupling the logic from the visualizer. By standardizing the hexadecimal grid format early on, the frontend could be tested with hardcoded text files before the generator was fully finished.
-* **Improvement:** <Añade aquí algo real vuestro, por ejemplo: "We could have spent more time pair-programming the MLX hooks, as integrating Python with standard 42 C-based libraries presented unexpected edge cases.">
+* **Improvement:** <ADDDDDDDDD">
 
 ### Tools Used
 * **Version Control:** Git & GitHub.

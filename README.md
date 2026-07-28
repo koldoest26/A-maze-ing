@@ -1,4 +1,5 @@
 *This project has been created as part of the 42 curriculum by luisesti and malopez-.*
+
 # A-Maze-ing: Procedural Maze Generator
 
 ## Description
@@ -30,14 +31,21 @@ We have provided a `Makefile` to automate the workflow.
    # Or manually: python3 a_maze_ing.py config.txt
    ```
 
-3. **Clean cache and temporary files:**
+3. **Visualizer Controls (MiniLibX):**
+   * `ESC` - Close the application.
+   * `1` - Generate a new random maze (using current config).
+   * `2` - Show/Hide the shortest path solution (BFS).
+   * `4` - **[Bonus]** Start the real-time generation animation.
+
+4. **Clean cache and temporary files:**
    ```bash
    make clean
    ```
 
-4. **Run strict linting (flake8 & mypy):**
+5. **Run strict linting (flake8 & mypy):**
    ```bash
    make lint
+   # Or 'make lint-strict' depending on Makefile setup
    ```
 
 ---
@@ -79,6 +87,21 @@ We implemented the **Iterative Recursive Backtracker** (Depth-First Search) to c
 
 ---
 
+## Advanced Features & Bonuses
+
+Beyond the mandatory requirements, we implemented the following advanced features:
+
+1. **Playable "Pac-Man" Mode (`PERFECT=False`):** 
+   When a non-perfect maze is requested, the generator post-processes the perfect tree by intelligently removing dead-ends without creating large open areas (preventing 3x3 open zones). This creates a "braided" maze with multiple independent routes (loops) while explicitly ensuring the corners and the center remain accessible, scoring a maximum "Bonus-grade" rating in the official `maze_analyzer.py` tool.
+   
+2. **Real-Time Generation Animation:** 
+   Instead of generating the maze instantly, we decoupled the mathematical generation from the visual rendering using Python Generators (`yield`). This allows the MiniLibX interface to visually animate the algorithm carving out the paths step-by-step in real-time, without blocking the main execution thread or hitting recursion limits.
+
+3. **Strict I/O Security Validation (Defensive Programming):** 
+   To prevent arbitrary file overwriting (e.g., maliciously setting `OUTPUT_FILE=main.py`) or path traversal attacks (e.g., attempting to write outside the execution directory), the configuration parser implements strict defensive checks. It enforces `.txt` extensions and local directory paths exclusively, safely aborting execution with a clear error if malicious inputs are detected.
+
+---
+
 ## Reusable Code (The `mazegen` Module)
 
 The core logic of the maze generator has been strictly decoupled from the main execution script and packaged into a standalone module called `mazegen`.
@@ -90,7 +113,6 @@ The package is built as a `.whl` and `.tar.gz` file located in the repository. I
 pip install mazegen-1.0.0-py3-none-any.whl
 ```
 
-
 ### How to build the package from source
 During the evaluation, you will be asked to rebuild this package. From the root of the repository, ensure you have the build tools installed and run the build command:
 
@@ -100,8 +122,10 @@ pip install build
 
 # Build the package from the source files
 python3 -m build
-```
 
+# Build the package from Makefile
+make build
+```
 
 ### Usage Example in a New Project
 
@@ -127,8 +151,8 @@ solution = maze.solve()
 
 ### Roles
 To ensure efficiency and avoid merge conflicts, we divided the project into two distinct architectural layers:
-* **<luisesti> (Backend & Logic):** Responsible for the mathematical generation of the maze, the backtracker algorithm, bitwise data formatting, BFS pathfinding, configuration parsing, and building the pip-installable module.
-* **<malopez-> (Frontend & UI):** Responsible for integrating the MiniLibX library, translating the backend's data into visual pixels, handling keyboard hooks, managing application state (regenerate, toggle path, color changes), and memory leak prevention.
+* **luisesti (Backend & Logic):** Responsible for the mathematical generation of the maze, the backtracker algorithm, bitwise data formatting, BFS pathfinding, configuration parsing, and building the pip-installable module.
+* **malopez- (Frontend & UI):** Responsible for integrating the MiniLibX library, translating the backend's data into visual pixels, handling keyboard hooks, managing application state (regenerate, toggle path, color changes), and memory leak prevention.
 
 ### Anticipated Planning vs. Evolution
 * *Initial Plan:* We aimed to work on the algorithm together and then split the visual aspects.
@@ -136,7 +160,7 @@ To ensure efficiency and avoid merge conflicts, we divided the project into two 
 
 ### What Worked Well & Areas for Improvement
 * **Worked Well:** Decoupling the logic from the visualizer. By standardizing the hexadecimal grid format early on, the frontend could be tested with hardcoded text files before the generator was fully finished.
-* **Improvement:** <ADDDDDDDDD">
+* **Improvement:** Navigating the strict formatting limits of `flake8` while keeping complex algorithmic logic readable was challenging and required several refactoring sessions. Additionally, integrating the official `maze_analyzer.py` earlier in our pipeline would have helped us detect edge-cases with the "42" pattern enclosure sooner.
 
 ### Tools Used
 * **Version Control:** Git & GitHub.
@@ -158,4 +182,5 @@ Artificial Intelligence (LLMs) was used during this project as a conceptual soun
 * Discussing the tradeoffs between Prim's, Kruskal's, and the Recursive Backtracker algorithms.
 * Generating boilerplate code for the `pyproject.toml` file to package the reusable module.
 * Reviewing `flake8` errors to format line lengths and docstrings properly.
-All generated concepts were thoroughly reviewed, manually tested, and deeply understood before integration into the final codebase.
+* Structuring and formatting this README.md file to ensure it clearly meets all curriculum requirements.
+All generated concepts and texts were thoroughly reviewed, manually tested, and deeply understood before integration into the final codebase.

@@ -67,7 +67,7 @@ def parse_config(filename: str) -> Dict[str, Any]:
     entry_x, entry_y = config['ENTRY']
     exit_x, exit_y = config['EXIT']
 
-    # Dividimos las líneas para no superar los 79 caracteres de Flake8
+    # Divide by 2 to ensure the entry and exit are on the maze path)
     if not (0 <= entry_x < config['WIDTH'] and
             0 <= entry_y < config['HEIGHT']):
         raise ValueError(
@@ -78,6 +78,16 @@ def parse_config(filename: str) -> Dict[str, Any]:
             0 <= exit_y < config['HEIGHT']):
         raise ValueError(
             f"EXIT coordinates {config['EXIT']} are out of bounds."
+        )
+
+    # Validate OUTPUT_FILE to prevent malicious overwrites (e.g. main.py)
+    output_file = config['OUTPUT_FILE']
+    if not output_file.endswith('.txt'):
+        raise ValueError("OUTPUT_FILE must have a .txt extension.")
+
+    if '/' in output_file or '\\' in output_file or '..' in output_file:
+        raise ValueError(
+            "OUTPUT_FILE must be in the current directory, not a path."
         )
 
     return config

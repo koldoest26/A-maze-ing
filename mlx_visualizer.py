@@ -1,7 +1,7 @@
 """Visualizer module using MiniLibX and Image Buffers."""
 
 import os
-from typing import Any
+from typing import Any, Optional, Iterator
 from mazegen.generator import MazeGenerator
 
 try:
@@ -30,7 +30,7 @@ class MazeVisualizer:
         self.w_height = self.maze.height * self.cell_size
 
         self.animating = False
-        self.gen_iterator = None
+        self.gen_iterator: Optional[Iterator[None]] = None
         self.steps_per_frame = 10  # Speed
 
         if MLX_READY:

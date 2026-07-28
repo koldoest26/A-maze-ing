@@ -1,6 +1,5 @@
 """Visualizer module using MiniLibX and Image Buffers."""
 
-import os
 import sys
 from typing import Any, Optional, Iterator
 from mazegen.generator import MazeGenerator
@@ -40,9 +39,12 @@ class MazeVisualizer:
             self.mlx = _Mlx()
             self.mlx_ptr = self.mlx.mlx_init()
 
-			# Segfault check
+            # Segfault check
             if not self.mlx_ptr:
-                print("Error\nCould not initialize MLX graphical backend.", file=sys.stderr)
+                print(
+                    "Error\nCould not initialize MLX graphical backend.",
+                    file=sys.stderr
+                )
                 sys.exit(1)
 
             # Window height includes +150 pixels for the menu area

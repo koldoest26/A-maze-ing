@@ -40,7 +40,13 @@ def parse_config(filename: str) -> Dict[str, Any]:
                     )
                 config[key] = (int(coords[0]), int(coords[1]))
             elif key == 'PERFECT':
-                config[key] = value.lower() == 'true'
+                # Validate boolean value
+                val_lower = value.lower()
+                if val_lower not in ('true', 'false'):
+                    raise ValueError(
+                        f"Line {line_num}: PERFECT must be 'true' or 'false'."
+                    )
+                config[key] = val_lower == 'true'
             elif key == 'SEED':
                 config[key] = int(value)
             elif key == 'OUTPUT_FILE':
@@ -67,7 +73,6 @@ def parse_config(filename: str) -> Dict[str, Any]:
     entry_x, entry_y = config['ENTRY']
     exit_x, exit_y = config['EXIT']
 
-    # Divide by 2 to ensure the entry and exit are on the maze path)
     if not (0 <= entry_x < config['WIDTH'] and
             0 <= entry_y < config['HEIGHT']):
         raise ValueError(
@@ -79,6 +84,10 @@ def parse_config(filename: str) -> Dict[str, Any]:
         raise ValueError(
             f"EXIT coordinates {config['EXIT']} are out of bounds."
         )
+
+    # Check that ENTRY and EXIT are not the same
+    if config['ENTRY'] == config['EXIT']:
+        raise ValueError("ENTRY and EXIT coordinates must be different.")
 
     # Validate OUTPUT_FILE to prevent malicious overwrites (e.g. main.py)
     output_file = config['OUTPUT_FILE']

@@ -188,7 +188,7 @@ class MazeVisualizer:
                 start_y + (i * 20), 0xFFFFFF, text
             )
 
-        # 7. Push to window
+        # Push to window
         self.mlx.mlx_put_image_to_window(
             self.mlx_ptr, self.win_ptr, self.img_ptr, 0, 0
         )

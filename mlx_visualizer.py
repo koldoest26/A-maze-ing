@@ -1,6 +1,7 @@
 """Visualizer module using MiniLibX and Image Buffers."""
 
 import os
+import sys
 from typing import Any, Optional, Iterator
 from mazegen.generator import MazeGenerator
 
@@ -39,9 +40,14 @@ class MazeVisualizer:
             self.mlx = _Mlx()
             self.mlx_ptr = self.mlx.mlx_init()
 
-            # Window height includes +130 pixels for the menu area
+			# Segfault check
+            if not self.mlx_ptr:
+                print("Error\nCould not initialize MLX graphical backend.", file=sys.stderr)
+                sys.exit(1)
+
+            # Window height includes +150 pixels for the menu area
             self.win_ptr = self.mlx.mlx_new_window(
-                self.mlx_ptr, self.w_width, self.w_height + 130,
+                self.mlx_ptr, self.w_width, self.w_height + 150,
                 "A-Maze-Ing 42"
             )
 
@@ -256,8 +262,10 @@ class MazeVisualizer:
     def key_press(self, keycode: int, param: Any) -> None:
         """Handles keyboard events (ESC, 1, 2, 3)."""
         if keycode in (65307, 53):  # ESC
-            self.mlx.mlx_loop_exit(self.mlx_ptr)
-            os._exit(0)
+            self.mlx.mlx_destroy_image(self.mlx_ptr, self.img_ptr)
+            self.mlx.mlx_destroy_window(self.mlx_ptr, self.win_ptr)
+            self.mlx.mlx_release(self.mlx_ptr)
+            sys.exit(0)
         elif keycode in (49, 18, 49 + 65360):   # '1' or Num1
             w = self.maze.width
             h = self.maze.height

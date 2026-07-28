@@ -64,6 +64,12 @@ class MazeGenerator:
         self.reserved_cells: Set[Tuple[int, int]] = set()
         self._embed_42_pattern()
 
+        # Validate that ENTRY and EXIT do not overlap with the reserved '42' pattern
+        if self.entry in self.reserved_cells:
+            raise ValueError("ENTRY coordinates overlap with the '42' pattern.")
+        if self.exit_coord in self.reserved_cells:
+            raise ValueError("EXIT coordinates overlap with the '42' pattern.")
+
     def _embed_42_pattern(self) -> None:
         """Embeds the '42' pattern in the center of the maze if it fits."""
         MIN_WIDTH_FOR_42 = 9

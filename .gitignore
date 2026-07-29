@@ -1,0 +1,11 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+
+# Packaging and Build
+dist/
+
+# Output files
+maze_output.txt

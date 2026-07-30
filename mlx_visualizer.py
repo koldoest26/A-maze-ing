@@ -1,6 +1,7 @@
 """Visualizer module using MiniLibX and Image Buffers."""
 
 import sys
+import os
 from typing import Any, Optional, Iterator
 from mazegen.generator import MazeGenerator
 
@@ -267,7 +268,7 @@ class MazeVisualizer:
             self.mlx.mlx_destroy_image(self.mlx_ptr, self.img_ptr)
             self.mlx.mlx_destroy_window(self.mlx_ptr, self.win_ptr)
             self.mlx.mlx_release(self.mlx_ptr)
-            sys.exit(0)
+            os._exit(0)
         elif keycode in (49, 18, 49 + 65360):   # '1' or Num1
             w = self.maze.width
             h = self.maze.height
